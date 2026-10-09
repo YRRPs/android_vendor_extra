@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: Yim's Riced ROM Project
+     SPDX-License-Identifier: Apache-2.0
+
+     Priority 360 sits above android.overlay.oplus.target (350), the salami
+     device overlay that ships the stock auto-brightness curve.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="org.yrrp.overlay.salami.autobrightness">
+    <overlay android:targetPackage="android"
+             android:isStatic="true"
+             android:priority="360" />
+</manifest>
