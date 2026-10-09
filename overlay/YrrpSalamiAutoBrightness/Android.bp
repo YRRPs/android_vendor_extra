@@ -1,0 +1,9 @@
+//
+// SPDX-FileCopyrightText: Yim's Riced ROM Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+runtime_resource_overlay {
+    name: "YrrpSalamiAutoBrightness",
+    device_specific: true,
+}

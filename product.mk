@@ -11,3 +11,13 @@
 # every other build falls back to the full OTA.
 PRODUCT_SYSTEM_PROPERTIES += \
     lineage.updater.uri=https://ota.yimura.dev/updates/{device}/{incr}.json
+
+# Dim indoor auto-brightness on salami without changing daylight. The curve
+# is salami-specific, and this file applies to every device. Product
+# makefiles are evaluated in isolation, so PRODUCT_DEVICE is not visible
+# here; gate on the lunch target instead. A second salami product name
+# would need adding to this check.
+ifeq ($(TARGET_PRODUCT),lineage_salami)
+PRODUCT_PACKAGES += \
+    YrrpSalamiAutoBrightness
+endif
