@@ -12,23 +12,19 @@
 # build falls back to the channel's full OTA. ro.lineage.releasetype cannot hold
 # the type, because LineageOS turns custom values back into UNOFFICIAL.
 YRRP_BUILD_TYPE ?= vanilla
-# Bracketing makes the word match exact: whitespace or extra words split the
-# bracketed value, so it no longer equals [vanilla] or [gapps].
-ifeq ($(filter [vanilla] [gapps],[$(YRRP_BUILD_TYPE)]),)
+ifeq ($(YRRP_BUILD_TYPE),vanilla)
+PRODUCT_SYSTEM_PROPERTIES += \
+    lineage.updater.uri=https://ota.yimura.dev/updates/{device}/{incr}.json
+else ifeq ($(YRRP_BUILD_TYPE),gapps)
+$(call inherit-product, vendor/gapps/arm64/arm64-vendor.mk)
+PRODUCT_SYSTEM_PROPERTIES += \
+    lineage.updater.uri=https://ota.yimura.dev/updates/{device}/gapps/{incr}.json
+else
 $(error YRRP_BUILD_TYPE must be vanilla or gapps, got '$(YRRP_BUILD_TYPE)')
 endif
 
 PRODUCT_SYSTEM_PROPERTIES += \
     ro.yrrp.build.type=$(YRRP_BUILD_TYPE)
-
-ifeq ($(YRRP_BUILD_TYPE),gapps)
-$(call inherit-product, vendor/gapps/arm64/arm64-vendor.mk)
-PRODUCT_SYSTEM_PROPERTIES += \
-    lineage.updater.uri=https://ota.yimura.dev/updates/{device}/gapps/{incr}.json
-else
-PRODUCT_SYSTEM_PROPERTIES += \
-    lineage.updater.uri=https://ota.yimura.dev/updates/{device}/{incr}.json
-endif
 
 # Dim indoor auto-brightness on salami without changing daylight. The curve
 # is salami-specific, and this file applies to every device. Product
