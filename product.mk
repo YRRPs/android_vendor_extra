@@ -12,7 +12,9 @@
 # build falls back to the channel's full OTA. ro.lineage.releasetype cannot hold
 # the type, because LineageOS turns custom values back into UNOFFICIAL.
 YRRP_BUILD_TYPE ?= vanilla
-ifeq ($(filter vanilla gapps,$(YRRP_BUILD_TYPE)),)
+# Bracketing makes the word match exact: whitespace or extra words split the
+# bracketed value, so it no longer equals [vanilla] or [gapps].
+ifeq ($(filter [vanilla] [gapps],[$(YRRP_BUILD_TYPE)]),)
 $(error YRRP_BUILD_TYPE must be vanilla or gapps, got '$(YRRP_BUILD_TYPE)')
 endif
 

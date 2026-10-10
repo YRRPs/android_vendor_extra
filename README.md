@@ -11,8 +11,9 @@ configuration (`vendor/lineage/config/common.mk`), so properties set here win.
 | `lineage.updater.uri` | vanilla: `https://ota.yimura.dev/updates/{device}/{incr}.json`<br>gapps: `https://ota.yimura.dev/updates/{device}/gapps/{incr}.json` | The Updater substitutes `{device}` (`salami`) and `{incr}`, and otherwise queries download.lineageos.org, which never lists UNOFFICIAL builds. Each type is its own OTA channel with its own incremental chain. |
 
 The `gapps` type also inherits `vendor/gapps/arm64/arm64-vendor.mk`.
-`YRRP_BUILD_TYPE` must be `vanilla` or `gapps`; any other value stops the
-build with an error.
+`YRRP_BUILD_TYPE` must be exactly `vanilla` or `gapps` (unset means
+`vanilla`); any other value, including an empty or whitespace-padded one,
+stops the build with an error.
 
 ## Build a type
 
