@@ -7,13 +7,27 @@ configuration (`vendor/lineage/config/common.mk`), so properties set here win.
 
 | Property | Value | Why |
 |---|---|---|
-| `lineage.updater.uri` | `https://ota.yimura.dev/updates/{device}.json` | The Updater substitutes `{device}` (`salami`) and otherwise queries download.lineageos.org, which never lists UNOFFICIAL builds. |
+| `ro.yrrp.build.type` | `vanilla` (default) or `gapps` | Records the build type. `ro.lineage.releasetype` cannot hold it, because LineageOS turns custom values back into UNOFFICIAL. |
+| `lineage.updater.uri` | vanilla: `https://ota.yimura.dev/updates/{device}/{incr}.json`<br>gapps: `https://ota.yimura.dev/updates/{device}/gapps/{incr}.json` | The Updater substitutes `{device}` (`salami`) and `{incr}`, and otherwise queries download.lineageos.org, which never lists UNOFFICIAL builds. Each type is its own OTA channel with its own incremental chain. |
 
-Verify on a built tree:
+The `gapps` type also inherits `vendor/gapps/arm64/arm64-vendor.mk`.
+`YRRP_BUILD_TYPE` must be `vanilla` or `gapps`; any other value stops the
+build with an error.
+
+## Build a type
 
 ```bash
-grep lineage.updater.uri out/target/product/salami/system/build.prop
+YRRP_BUILD_TYPE=gapps breakfast salami
 ```
+
+Leave `YRRP_BUILD_TYPE` unset for `vanilla`. Verify on a built tree:
+
+```bash
+grep -E 'ro.yrrp.build.type|lineage.updater.uri' out/target/product/salami/system/build.prop
+```
+
+`tests/test-product-mk.sh` evaluates `product.mk` with GNU Make outside the
+Android tree and checks both types plus the unknown-type error.
 
 ## Salami indoor auto-brightness
 
