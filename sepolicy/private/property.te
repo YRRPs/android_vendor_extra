@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Yim's Riced ROM Project
+# SPDX-License-Identifier: Apache-2.0
 # YRRP boot animation style chosen in Settings, and bootanimation's status.
 product_internal_prop(yrrp_bootanim_prop)
 product_internal_prop(yrrp_bootanim_status_prop)

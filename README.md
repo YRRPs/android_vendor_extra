@@ -86,5 +86,15 @@ may touch them. Access matrix:
 | `shell` | set (acceptance, restoration) | read |
 
 `tests/test_sepolicy.py` checks these rules statically; only `m selinux_policy`
-proves they compile. If product policy cannot grant rules to platform
-domains, move `sepolicy/private` to `SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS`.
+proves they compile. Product private policy is allowed to grant these rules to
+platform domains (`product_internal_prop` only forbids non-coredomain access).
+If it ever has to move to `SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS`, also change both
+`product_internal_prop` lines to `system_internal_prop`.
+
+Verify the shutdown animation property on a built device:
+
+```bash
+adb shell getprop ro.init.shutdown_animation
+```
+
+It must print `true`.

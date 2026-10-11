@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: Yim's Riced ROM Project
+# SPDX-License-Identifier: Apache-2.0
 # Reads the style at start; publishes its route and result.
 get_prop(bootanim, yrrp_bootanim_prop)
 set_prop(bootanim, yrrp_bootanim_status_prop)
