@@ -35,3 +35,11 @@ ifeq ($(TARGET_PRODUCT),lineage_salami)
 PRODUCT_PACKAGES += \
     YrrpSalamiAutoBrightness
 endif
+
+# Matrix boot animation (frameworks/base cmds/bootanimation). init restarts the
+# animation class during shutdown only when this property is true. The product
+# sepolicy lets YRRPs Settings write persist.yrrp.bootanim.*, bootanimation read
+# it, and bootanimation publish its sys.yrrp.bootanim.* status.
+PRODUCT_SYSTEM_PROPERTIES += \
+    ro.init.shutdown_animation=true
+PRODUCT_PRIVATE_SEPOLICY_DIRS += vendor/extra/sepolicy/private
