@@ -1,0 +1,3 @@
+persist.yrrp.bootanim.style      u:object_r:yrrp_bootanim_prop:s0 exact string
+persist.yrrp.bootanim.full_intro u:object_r:yrrp_bootanim_prop:s0 exact bool
+sys.yrrp.bootanim.               u:object_r:yrrp_bootanim_status_prop:s0

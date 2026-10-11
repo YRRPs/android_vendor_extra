@@ -1,0 +1,2 @@
+# YRRPs Settings > Boot animation writes the style.
+set_prop(system_app, yrrp_bootanim_prop)
