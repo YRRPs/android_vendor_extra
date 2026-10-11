@@ -62,3 +62,39 @@ Verify on salami:
 adb shell cmd overlay list android
 adb shell dumpsys display | grep -A3 mDefaultConfig
 ```
+
+## Boot animation
+
+`product.mk` sets `ro.init.shutdown_animation=true`, so init runs
+bootanimation on shutdown and reboot as well as on boot, and adds
+`sepolicy/private` to `PRODUCT_PRIVATE_SEPOLICY_DIRS`.
+
+The Matrix boot animation uses two property namespaces:
+
+| Namespace | Type | Meaning |
+|---|---|---|
+| `persist.yrrp.bootanim.style` (exact, string) and `persist.yrrp.bootanim.full_intro` (exact, bool) | `yrrp_bootanim_prop` | The style chosen in YRRPs Settings and the full-intro switch. Settings writes them, bootanimation reads them. |
+| `sys.yrrp.bootanim.*` (prefix) | `yrrp_bootanim_status_prop` | Route and result that bootanimation publishes, for acceptance checks over adb. |
+
+Both types are declared with `product_internal_prop`, so only core domains
+may touch them. Access matrix:
+
+| Domain | `yrrp_bootanim_prop` (`persist.yrrp.bootanim.*`) | `yrrp_bootanim_status_prop` (`sys.yrrp.bootanim.*`) |
+|---|---|---|
+| `system_app` (Settings) | set (implies read) | none |
+| `bootanim` | read | set |
+| `shell` | set (acceptance, restoration) | read |
+
+`tests/test_sepolicy.py` checks these rules statically; only `m selinux_policy`
+proves they compile. Product private policy is allowed to grant these rules to
+platform domains (`product_internal_prop` only forbids non-coredomain access).
+If it ever has to move to `SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS`, also change both
+`product_internal_prop` lines to `system_internal_prop`.
+
+Verify the shutdown animation property on a built device:
+
+```bash
+adb shell getprop ro.init.shutdown_animation
+```
+
+It must print `true`.

@@ -14,6 +14,7 @@ include ${make_repo}/product.mk
 show:
 	@printf 'props=%s\n' "\$(strip \$(PRODUCT_SYSTEM_PROPERTIES))"
 	@printf 'inherited=%s\n' "\$(strip \$(INHERITED))"
+	@printf 'sepolicy=%s\n' "\$(strip \$(PRODUCT_PRIVATE_SEPOLICY_DIRS))"
 EOF
 
 run() { env -u YRRP_BUILD_TYPE "$@" make --no-print-directory -f "${scratch}/harness.mk" show; }
@@ -22,11 +23,14 @@ vanilla=$(run)
 grep -Eq 'ro.yrrp.build.type=vanilla( |$)' <<<"${vanilla}"
 grep -q 'lineage.updater.uri=https://ota.yimura.dev/updates/{device}/{incr}.json' <<<"${vanilla}"
 grep -q '^inherited=$' <<<"${vanilla}"
+grep -Eq 'ro.init.shutdown_animation=true( |$)' <<<"${vanilla}"
+grep -q '^sepolicy=vendor/extra/sepolicy/private$' <<<"${vanilla}"
 
 gapps=$(run YRRP_BUILD_TYPE=gapps)
 grep -Eq 'ro.yrrp.build.type=gapps( |$)' <<<"${gapps}"
 grep -q 'lineage.updater.uri=https://ota.yimura.dev/updates/{device}/gapps/{incr}.json' <<<"${gapps}"
 grep -q '^inherited=vendor/gapps/arm64/arm64-vendor.mk$' <<<"${gapps}"
+grep -Eq 'ro.init.shutdown_animation=true( |$)' <<<"${gapps}"
 
 expect_rejected() {
     local value=$1
