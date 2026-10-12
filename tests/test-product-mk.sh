@@ -15,6 +15,7 @@ show:
 	@printf 'props=%s\n' "\$(strip \$(PRODUCT_SYSTEM_PROPERTIES))"
 	@printf 'inherited=%s\n' "\$(strip \$(INHERITED))"
 	@printf 'sepolicy=%s\n' "\$(strip \$(PRODUCT_PRIVATE_SEPOLICY_DIRS))"
+	@printf 'packages=%s\n' "\$(strip \$(PRODUCT_PACKAGES))"
 EOF
 
 run() { env -u YRRP_BUILD_TYPE "$@" make --no-print-directory -f "${scratch}/harness.mk" show; }
@@ -40,6 +41,16 @@ expect_rejected() {
     fi
     grep -qF "YRRP_BUILD_TYPE must be vanilla or gapps, got '${value}'" "${scratch}/bad.out"
 }
+
+xueying=$(run TARGET_PRODUCT=lineage_xueying)
+grep -Eq '^packages=(.* )?YrrpXueyingUnfold( |$)' <<<"${xueying}"
+if grep -q 'YrrpSalamiAutoBrightness' <<<"${xueying}"; then
+    echo 'salami overlay must not install on xueying' >&2; exit 1
+fi
+salami=$(run TARGET_PRODUCT=lineage_salami)
+if grep -q 'YrrpXueyingUnfold' <<<"${salami}"; then
+    echo 'xueying unfold overlay must not install on salami' >&2; exit 1
+fi
 
 expect_rejected 'kernelsu'
 expect_rejected ''

@@ -43,3 +43,12 @@ endif
 PRODUCT_SYSTEM_PROPERTIES += \
     ro.init.shutdown_animation=true
 PRODUCT_PRIVATE_SEPOLICY_DIRS += vendor/extra/sepolicy/private
+
+# Turn on AOSP's hinge-driven fold/unfold framework on the OnePlus Open. The
+# YRRPs Fold animation setting chooses Stock, Pixel or Duo in SystemUI; Stock
+# (the default) suppresses every unfold animation. Gate on the lunch target for
+# the same reason as the salami overlay above.
+ifeq ($(TARGET_PRODUCT),lineage_xueying)
+PRODUCT_PACKAGES += \
+    YrrpXueyingUnfold
+endif
