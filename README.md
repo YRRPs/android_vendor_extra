@@ -114,12 +114,14 @@ system-wide ad blocker without root, a VPN, or a writable `/system`:
 
 | Property | Type | Meaning |
 |---|---|---|
-| `persist.yrrp.adblock.enabled` | bool | `1` blocks; `0` restores the stock hosts file |
+| `persist.yrrp.adblock.enabled` | bool | `1` blocks; `0` restores the stock hosts file; other values do nothing |
 | `sys.yrrp.adblock.apply` | int | Settings bumps it after an update; init re-copies while enabled |
 
 Only init writes `hosts` and `hosts.stock` (`yrrp_hosts_file`). Settings (`system_app`)
-writes only the rest of `/data/misc/yrrp` (`yrrp_adblock_data_file`). netd reads the
-live file.
+writes only the rest of `/data/misc/yrrp` (`yrrp_adblock_data_file`). Every platform
+domain can read the live file, as it could read the stock `system_file`; vendor
+domains cannot, because neverallow bars them from core data files. Only `1` and `0`
+switch the file; init ignores other values.
 
 Check on a device:
 

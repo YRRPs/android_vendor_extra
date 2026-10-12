@@ -2,9 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # YRRPs Settings > Boot animation writes the style.
 set_prop(system_app, yrrp_bootanim_prop)
-# YRRPs Settings > Ad blocking stages hosts.blocked and sets the switch; it only reads the
-# live hosts file, which init alone writes.
+# YRRPs Settings > Ad blocking stages hosts.blocked and sets the switch. It reads the live
+# hosts file through coredomain.te; init alone writes it.
 set_prop(system_app, yrrp_adblock_prop)
 allow system_app yrrp_adblock_data_file:dir rw_dir_perms;
 allow system_app yrrp_adblock_data_file:file create_file_perms;
-allow system_app yrrp_hosts_file:file r_file_perms;

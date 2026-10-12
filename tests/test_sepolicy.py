@@ -45,8 +45,7 @@ class SepolicyTest(unittest.TestCase):
             ["set_prop(system_app, yrrp_bootanim_prop)",
              "set_prop(system_app, yrrp_adblock_prop)",
              "allow system_app yrrp_adblock_data_file:dir rw_dir_perms;",
-             "allow system_app yrrp_adblock_data_file:file create_file_perms;",
-             "allow system_app yrrp_hosts_file:file r_file_perms;"],
+             "allow system_app yrrp_adblock_data_file:file create_file_perms;"],
             rules("system_app.te"))
         self.assertEqual(
             ["allow init system_file:file mounton;",
@@ -55,9 +54,8 @@ class SepolicyTest(unittest.TestCase):
              "allow init yrrp_hosts_file:file { create_file_perms relabelfrom relabelto };"],
             rules("init.te"))
         self.assertEqual(
-            ["allow netd yrrp_adblock_data_file:dir search;",
-             "allow netd yrrp_hosts_file:file r_file_perms;"],
-            rules("netd.te"))
+            ["allow coredomain yrrp_hosts_file:file r_file_perms;"],
+            rules("coredomain.te"))
         self.assertEqual(
             ["get_prop(bootanim, yrrp_bootanim_prop)",
              "set_prop(bootanim, yrrp_bootanim_status_prop)"],
@@ -70,7 +68,7 @@ class SepolicyTest(unittest.TestCase):
 
     def test_system_app_cannot_write_live_hosts(self):
         text = (POLICY / "system_app.te").read_text(encoding="utf-8")
-        self.assertNotRegex(text, r"yrrp_hosts_file:file\s+(create|rw|w)")
+        self.assertNotIn("yrrp_hosts_file", text)
 
 if __name__ == "__main__":
     unittest.main()

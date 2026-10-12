@@ -1,5 +1,0 @@
-# SPDX-FileCopyrightText: Yim's Riced ROM Project
-# SPDX-License-Identifier: Apache-2.0
-# DnsResolver in netd opens /system/etc/hosts, which is the bind-mounted live hosts file.
-allow netd yrrp_adblock_data_file:dir search;
-allow netd yrrp_hosts_file:file r_file_perms;

@@ -15,7 +15,8 @@ on post-fs-data
     restorecon_recursive /data/misc/yrrp
     mount none /data/misc/yrrp/hosts /system/etc/hosts bind
 
-# Persist properties can load before the seed above; re-apply before netd starts.
+# Safety net: re-apply the saved state once at boot, whatever order the property trigger
+# below ran in relative to the seed above. Copying the same file twice is harmless.
 on boot && property:persist.yrrp.adblock.enabled=1
     copy /data/misc/yrrp/hosts.blocked /data/misc/yrrp/hosts
 
