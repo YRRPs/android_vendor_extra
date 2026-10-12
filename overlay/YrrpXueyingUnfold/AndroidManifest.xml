@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: Yim's Riced ROM Project
+     SPDX-License-Identifier: Apache-2.0
+
+     Priority 360 sits above android.overlay.oplus.target (350), the xueying
+     device overlay. Turns on AOSP's hinge-driven unfold framework, which the
+     YRRPs Fold animation setting (Stock/Pixel/Duo) then gates in SystemUI.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="org.yrrp.overlay.xueying.unfold">
+    <overlay android:targetPackage="android"
+             android:isStatic="true"
+             android:priority="360" />
+</manifest>
