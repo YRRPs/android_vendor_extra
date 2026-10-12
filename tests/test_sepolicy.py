@@ -54,7 +54,8 @@ class SepolicyTest(unittest.TestCase):
              "allow init yrrp_hosts_file:file { create_file_perms relabelfrom relabelto };"],
             rules("init.te"))
         self.assertEqual(
-            ["allow coredomain yrrp_hosts_file:file r_file_perms;"],
+            ["allow { coredomain -mediaextractor -perfetto -traced -traced_probes }"
+             " yrrp_hosts_file:file r_file_perms;"],
             rules("coredomain.te"))
         self.assertEqual(
             ["get_prop(bootanim, yrrp_bootanim_prop)",
@@ -65,6 +66,13 @@ class SepolicyTest(unittest.TestCase):
              "get_prop(shell, yrrp_bootanim_status_prop)",
              "set_prop(shell, yrrp_adblock_prop)"],
             rules("shell.te"))
+
+    def test_live_hosts_read_skips_neverallowed_domains(self):
+        # AOSP neverallows these domains from opening data files (their .te files in
+        # system/sepolicy/private). None is a net_domain, so none resolves names.
+        rule = rules("coredomain.te")[0]
+        for domain in ("mediaextractor", "perfetto", "traced", "traced_probes"):
+            self.assertIn(" -" + domain + " ", rule + " ")
 
     def test_system_app_cannot_write_live_hosts(self):
         text = (POLICY / "system_app.te").read_text(encoding="utf-8")
