@@ -3,3 +3,5 @@
 # YRRP boot animation style chosen in Settings, and bootanimation's status.
 product_internal_prop(yrrp_bootanim_prop)
 product_internal_prop(yrrp_bootanim_status_prop)
+# Ad blocking switch and apply counter, set by Settings; init copies the hosts file on change.
+product_internal_prop(yrrp_adblock_prop)
