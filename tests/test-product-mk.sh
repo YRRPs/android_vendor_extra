@@ -14,6 +14,7 @@ TARGET_COPY_OUT_PRODUCT := product
 include ${make_repo}/product.mk
 show:
 	@printf 'props=%s\n' "\$(strip \$(PRODUCT_SYSTEM_PROPERTIES))"
+	@printf 'productprops=%s\n' "\$(strip \$(PRODUCT_PRODUCT_PROPERTIES))"
 	@printf 'inherited=%s\n' "\$(strip \$(INHERITED))"
 	@printf 'sepolicy=%s\n' "\$(strip \$(PRODUCT_PRIVATE_SEPOLICY_DIRS))"
 	@printf 'packages=%s\n' "\$(strip \$(PRODUCT_PACKAGES))"
@@ -48,12 +49,16 @@ expect_rejected() {
 
 xueying=$(run TARGET_PRODUCT=lineage_xueying)
 grep -Eq '^packages=(.* )?YrrpXueyingUnfold( |$)' <<<"${xueying}"
+grep -Eq '^productprops=(.* )?persist.fold_lock_setting_enabled=true( |$)' <<<"${xueying}"
 if grep -q 'YrrpSalamiAutoBrightness' <<<"${xueying}"; then
     echo 'salami overlay must not install on xueying' >&2; exit 1
 fi
 salami=$(run TARGET_PRODUCT=lineage_salami)
 if grep -q 'YrrpXueyingUnfold' <<<"${salami}"; then
     echo 'xueying unfold overlay must not install on salami' >&2; exit 1
+fi
+if grep -q 'fold_lock_setting_enabled' <<<"${salami}${vanilla}"; then
+    echo 'fold-lock property must only be set on xueying' >&2; exit 1
 fi
 
 expect_rejected 'kernelsu'
