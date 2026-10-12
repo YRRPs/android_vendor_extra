@@ -52,3 +52,8 @@ ifeq ($(TARGET_PRODUCT),lineage_xueying)
 PRODUCT_PACKAGES += \
     YrrpXueyingUnfold
 endif
+
+# Hosts-file ad blocking (YRRPs Settings > Network > Ad blocking). init bind-mounts
+# /data/misc/yrrp/hosts over /system/etc/hosts, so /system stays read-only.
+PRODUCT_COPY_FILES += \
+    vendor/extra/init/yrrp_adblock.rc:$(TARGET_COPY_OUT_PRODUCT)/etc/init/yrrp_adblock.rc

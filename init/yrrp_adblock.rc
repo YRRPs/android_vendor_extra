@@ -1,0 +1,29 @@
+# SPDX-FileCopyrightText: Yim's Riced ROM Project
+# SPDX-License-Identifier: Apache-2.0
+#
+# YRRPs ad blocking. /system/etc/hosts shows /data/misc/yrrp/hosts through a bind mount.
+# init owns that file: it reseeds it from stock every boot and replaces its contents in
+# place (copy truncates, so the mount keeps the same inode). Settings only writes
+# hosts.blocked and sets the two properties.
+
+on post-fs-data
+    mkdir /data/misc/yrrp 0771 system system
+    copy /system/etc/hosts /data/misc/yrrp/hosts.stock
+    copy /system/etc/hosts /data/misc/yrrp/hosts
+    chmod 0644 /data/misc/yrrp/hosts.stock
+    chmod 0644 /data/misc/yrrp/hosts
+    restorecon_recursive /data/misc/yrrp
+    mount none /data/misc/yrrp/hosts /system/etc/hosts bind
+
+# Persist properties can load before the seed above; re-apply before netd starts.
+on boot && property:persist.yrrp.adblock.enabled=1
+    copy /data/misc/yrrp/hosts.blocked /data/misc/yrrp/hosts
+
+on property:persist.yrrp.adblock.enabled=1
+    copy /data/misc/yrrp/hosts.blocked /data/misc/yrrp/hosts
+
+on property:persist.yrrp.adblock.enabled=0
+    copy /data/misc/yrrp/hosts.stock /data/misc/yrrp/hosts
+
+on property:sys.yrrp.adblock.apply=* && property:persist.yrrp.adblock.enabled=1
+    copy /data/misc/yrrp/hosts.blocked /data/misc/yrrp/hosts

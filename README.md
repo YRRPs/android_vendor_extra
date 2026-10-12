@@ -98,3 +98,36 @@ adb shell getprop ro.init.shutdown_animation
 ```
 
 It must print `true`.
+
+## Hosts-file ad blocking
+
+`init/yrrp_adblock.rc` (installed to `/product/etc/init`) gives YRRPs Settings a
+system-wide ad blocker without root, a VPN, or a writable `/system`:
+
+1. At `post-fs-data`, init copies the stock `/system/etc/hosts` to
+   `/data/misc/yrrp/hosts.stock` and `/data/misc/yrrp/hosts`, then bind-mounts
+   `/data/misc/yrrp/hosts` over `/system/etc/hosts`.
+2. Settings downloads and checks the lists, writes `/data/misc/yrrp/hosts.blocked`,
+   and sets the properties below.
+3. init copies `hosts.blocked` (on) or `hosts.stock` (off) over the live file in place.
+   DnsResolver reads the hosts file on every lookup, so a change applies without a reboot.
+
+| Property | Type | Meaning |
+|---|---|---|
+| `persist.yrrp.adblock.enabled` | bool | `1` blocks; `0` restores the stock hosts file |
+| `sys.yrrp.adblock.apply` | int | Settings bumps it after an update; init re-copies while enabled |
+
+Only init writes `hosts` and `hosts.stock` (`yrrp_hosts_file`). Settings (`system_app`)
+writes only the rest of `/data/misc/yrrp` (`yrrp_adblock_data_file`). netd reads the
+live file.
+
+Check on a device:
+
+```bash
+adb shell getprop | grep yrrp.adblock
+adb shell cat /proc/$(adb shell pidof netd)/mountinfo | grep hosts
+adb shell ls -lZ /data/misc/yrrp
+```
+
+`tests/test_adblock_rc.py` checks the init fragment; `tests/test_sepolicy.py` checks
+the policy text. `m selinux_policy` and the device prove the rest.
