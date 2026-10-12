@@ -1,6 +1,9 @@
 # SPDX-FileCopyrightText: Yim's Riced ROM Project
 # SPDX-License-Identifier: Apache-2.0
-# /system/etc/hosts is the bind-mounted yrrp_hosts_file. Keep it readable by every platform
-# domain, as system_file was: netd's resolver, apps and WebView resolvers that open it
-# directly, and shell. Vendor domains are barred from core data files by neverallow.
-allow coredomain yrrp_hosts_file:file r_file_perms;
+# /system/etc/hosts is the bind-mounted yrrp_hosts_file. Keep it readable by the platform
+# domains that could read the stock system_file: netd's resolver, apps and WebView resolvers
+# that open it directly, and shell. Vendor domains are barred from core data files by
+# neverallow. AOSP neverallows mediaextractor, perfetto, traced and traced_probes from
+# opening data files (their .te files in system/sepolicy/private); none of them is a
+# net_domain, so none resolves names and none needs the hosts file.
+allow { coredomain -mediaextractor -perfetto -traced -traced_probes } yrrp_hosts_file:file r_file_perms;

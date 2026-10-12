@@ -119,9 +119,11 @@ system-wide ad blocker without root, a VPN, or a writable `/system`:
 
 Only init writes `hosts` and `hosts.stock` (`yrrp_hosts_file`). Settings (`system_app`)
 writes only the rest of `/data/misc/yrrp` (`yrrp_adblock_data_file`). Every platform
-domain can read the live file, as it could read the stock `system_file`; vendor
-domains cannot, because neverallow bars them from core data files. Only `1` and `0`
-switch the file; init ignores other values.
+domain can read the live file, as it could read the stock `system_file`, except
+`mediaextractor`, `perfetto`, `traced`, and `traced_probes`: AOSP neverallows them from
+opening data files, and none of them resolves names. Vendor domains cannot read it,
+because neverallow bars them from core data files. Only `1` and `0` switch the file;
+init ignores other values.
 
 Check on a device:
 
