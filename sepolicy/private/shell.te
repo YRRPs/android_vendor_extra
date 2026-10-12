@@ -3,3 +3,5 @@
 # adb acceptance: set and restore the style, read the status.
 set_prop(shell, yrrp_bootanim_prop)
 get_prop(shell, yrrp_bootanim_status_prop)
+# adb acceptance: switch ad blocking and re-apply it.
+set_prop(shell, yrrp_adblock_prop)

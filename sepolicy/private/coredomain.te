@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: Yim's Riced ROM Project
+# SPDX-License-Identifier: Apache-2.0
+# /system/etc/hosts is the bind-mounted yrrp_hosts_file. Keep it readable by every platform
+# domain, as system_file was: netd's resolver, apps and WebView resolvers that open it
+# directly, and shell. Vendor domains are barred from core data files by neverallow.
+allow coredomain yrrp_hosts_file:file r_file_perms;

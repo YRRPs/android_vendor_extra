@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: Yim's Riced ROM Project
+# SPDX-License-Identifier: Apache-2.0
+# Ad blocking: bind-mount the live hosts file over /system/etc/hosts, seed it from stock,
+# and copy hosts.blocked or hosts.stock over it in place.
+allow init system_file:file mounton;
+allow init yrrp_adblock_data_file:dir { create_dir_perms relabelfrom relabelto };
+allow init yrrp_adblock_data_file:file { r_file_perms relabelfrom relabelto };
+allow init yrrp_hosts_file:file { create_file_perms relabelfrom relabelto };

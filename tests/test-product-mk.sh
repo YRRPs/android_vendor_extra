@@ -10,12 +10,14 @@ make_repo=${repo// /\\ }
 
 cat > "${scratch}/harness.mk" <<EOF
 inherit-product = \$(eval INHERITED += \$(1))
+TARGET_COPY_OUT_PRODUCT := product
 include ${make_repo}/product.mk
 show:
 	@printf 'props=%s\n' "\$(strip \$(PRODUCT_SYSTEM_PROPERTIES))"
 	@printf 'inherited=%s\n' "\$(strip \$(INHERITED))"
 	@printf 'sepolicy=%s\n' "\$(strip \$(PRODUCT_PRIVATE_SEPOLICY_DIRS))"
 	@printf 'packages=%s\n' "\$(strip \$(PRODUCT_PACKAGES))"
+	@printf 'copy=%s\n' "\$(strip \$(PRODUCT_COPY_FILES))"
 EOF
 
 run() { env -u YRRP_BUILD_TYPE "$@" make --no-print-directory -f "${scratch}/harness.mk" show; }
@@ -26,12 +28,14 @@ grep -q 'lineage.updater.uri=https://ota.yimura.dev/updates/{device}/{incr}.json
 grep -q '^inherited=$' <<<"${vanilla}"
 grep -Eq 'ro.init.shutdown_animation=true( |$)' <<<"${vanilla}"
 grep -q '^sepolicy=vendor/extra/sepolicy/private$' <<<"${vanilla}"
+grep -q '^copy=vendor/extra/init/yrrp_adblock.rc:product/etc/init/yrrp_adblock.rc$' <<<"${vanilla}"
 
 gapps=$(run YRRP_BUILD_TYPE=gapps)
 grep -Eq 'ro.yrrp.build.type=gapps( |$)' <<<"${gapps}"
 grep -q 'lineage.updater.uri=https://ota.yimura.dev/updates/{device}/gapps/{incr}.json' <<<"${gapps}"
 grep -q '^inherited=vendor/gapps/arm64/arm64-vendor.mk$' <<<"${gapps}"
 grep -Eq 'ro.init.shutdown_animation=true( |$)' <<<"${gapps}"
+grep -q '^copy=vendor/extra/init/yrrp_adblock.rc:product/etc/init/yrrp_adblock.rc$' <<<"${gapps}"
 
 expect_rejected() {
     local value=$1

@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: Yim's Riced ROM Project
+# SPDX-License-Identifier: Apache-2.0
+# Ad blocking. Only init writes hosts and hosts.stock; Settings writes the rest.
+/data/misc/yrrp(/.*)?            u:object_r:yrrp_adblock_data_file:s0
+/data/misc/yrrp/hosts            u:object_r:yrrp_hosts_file:s0
+/data/misc/yrrp/hosts\.stock     u:object_r:yrrp_hosts_file:s0

@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: Yim's Riced ROM Project
+# SPDX-License-Identifier: Apache-2.0
+# Ad blocking: Settings' staging files under /data/misc/yrrp, and the live hosts file that
+# init bind-mounts over /system/etc/hosts.
+type yrrp_adblock_data_file, file_type, data_file_type, core_data_file_type;
+type yrrp_hosts_file, file_type, data_file_type, core_data_file_type;
