@@ -47,10 +47,14 @@ PRODUCT_PRIVATE_SEPOLICY_DIRS += vendor/extra/sepolicy/private
 # Turn on AOSP's hinge-driven fold/unfold framework on the OnePlus Open. The
 # YRRPs Fold animation setting chooses Stock, Pixel or Duo in SystemUI; Stock
 # (the default) suppresses every unfold animation. Gate on the lunch target for
-# the same reason as the salami overlay above.
+# the same reason as the salami overlay above. The overlay also sets
+# config_fold_lock_behavior, and the property below passes the fold-lock flag gate on
+# userdebug builds, so Android honours "Continue using apps on fold" here.
 ifeq ($(TARGET_PRODUCT),lineage_xueying)
 PRODUCT_PACKAGES += \
     YrrpXueyingUnfold
+PRODUCT_PRODUCT_PROPERTIES += \
+    persist.fold_lock_setting_enabled=true
 endif
 
 # Hosts-file ad blocking (YRRPs Settings > Network > Ad blocking). init bind-mounts

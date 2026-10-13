@@ -6,4 +6,6 @@
 <resources>
     <bool name="config_unfoldTransitionEnabled">true</bool>
     <bool name="config_unfoldTransitionHingeAngle">true</bool>
+    <!-- Show and honour Settings > Display > Continue using apps on fold. -->
+    <bool name="config_fold_lock_behavior">true</bool>
 </resources>
