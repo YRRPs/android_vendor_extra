@@ -10,7 +10,14 @@ configuration (`vendor/lineage/config/common.mk`), so properties set here win.
 | `ro.yrrp.build.type` | `vanilla` (default) or `gapps` | Records the build type. `ro.lineage.releasetype` cannot hold it, because LineageOS turns custom values back into UNOFFICIAL. |
 | `lineage.updater.uri` | vanilla: `https://ota.yimura.dev/updates/{device}/{incr}.json`<br>gapps: `https://ota.yimura.dev/updates/{device}/gapps/{incr}.json` | The Updater substitutes `{device}` (`salami`) and `{incr}`, and otherwise queries download.lineageos.org, which never lists UNOFFICIAL builds. Each type is its own OTA channel with its own incremental chain. |
 
-The `gapps` type also inherits `vendor/gapps/arm64/arm64-vendor.mk`.
+The `gapps` type also inherits `vendor/gapps/arm64/arm64-vendor.mk`, and
+installs `permissions/privapp-permissions-yrrp-gms.xml` to
+`/product/etc/permissions`. That file allowlists five privileged permissions
+that GmsCore 26.40.32 requests and MindTheGapps `baklava` lacks. Without
+`GET_ROLE_HOLDERS`, Google account sign-in fails with `AUTH_SECURITY_ERROR`.
+Android merges it with the MindTheGapps allowlist. Delete it once
+MindTheGapps/vendor_gapps#11 lands on `baklava`. Check it on a device with
+`adb shell pm get-privapp-permissions com.google.android.gms`.
 `YRRP_BUILD_TYPE` must be exactly `vanilla` or `gapps` (unset means
 `vanilla`); any other value, including an empty or whitespace-padded one,
 stops the build with an error.
