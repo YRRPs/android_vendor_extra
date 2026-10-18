@@ -17,6 +17,9 @@ PRODUCT_SYSTEM_PROPERTIES += \
     lineage.updater.uri=https://ota.yimura.dev/updates/{device}/{incr}.json
 else ifeq ($(YRRP_BUILD_TYPE),gapps)
 $(call inherit-product, vendor/gapps/arm64/arm64-vendor.mk)
+# Privileged permissions newer GmsCore needs and MindTheGapps baklava lacks.
+PRODUCT_COPY_FILES += \
+    vendor/extra/permissions/privapp-permissions-yrrp-gms.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/privapp-permissions-yrrp-gms.xml
 PRODUCT_SYSTEM_PROPERTIES += \
     lineage.updater.uri=https://ota.yimura.dev/updates/{device}/gapps/{incr}.json
 else
