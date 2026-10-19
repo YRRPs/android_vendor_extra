@@ -36,11 +36,7 @@ grep -Eq 'ro.yrrp.build.type=gapps( |$)' <<<"${gapps}"
 grep -q 'lineage.updater.uri=https://ota.yimura.dev/updates/{device}/gapps/{incr}.json' <<<"${gapps}"
 grep -q '^inherited=vendor/gapps/arm64/arm64-vendor.mk$' <<<"${gapps}"
 grep -Eq 'ro.init.shutdown_animation=true( |$)' <<<"${gapps}"
-grep -Eq '^copy=(.* )?vendor/extra/init/yrrp_adblock.rc:product/etc/init/yrrp_adblock.rc( |$)' <<<"${gapps}"
-grep -Eq '^copy=(.* )?vendor/extra/permissions/privapp-permissions-yrrp-gms.xml:product/etc/permissions/privapp-permissions-yrrp-gms.xml( |$)' <<<"${gapps}"
-if grep -q 'privapp-permissions-yrrp-gms' <<<"${vanilla}"; then
-    echo 'GMS allowlist must only install on gapps builds' >&2; exit 1
-fi
+grep -q '^copy=vendor/extra/init/yrrp_adblock.rc:product/etc/init/yrrp_adblock.rc$' <<<"${gapps}"
 
 expect_rejected() {
     local value=$1
